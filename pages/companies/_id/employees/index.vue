@@ -55,7 +55,9 @@
               <div class="text-xl font-medium text-dark">Statistics</div>
               <p class="text-grey">Your team powers</p>
             </div>
-            <NuxtLink :to="{ name: 'Employees-create' }" class="btn btn-primary"
+            <NuxtLink
+              :to="{ name: 'companies-id-employees-create' }"
+              class="btn btn-primary"
               >Add Employee</NuxtLink
             >
           </div>
@@ -66,8 +68,14 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-grey">In Total</p>
-                <div class="text-[32px] font-bold text-dark mt-[6px]">
-                  425,000
+                <div
+                  v-if="$fetchState.pending"
+                  class="text-[24px] font-bold text-grey mt-[6px]"
+                >
+                  Loading...
+                </div>
+                <div v-else class="text-[32px] font-bold text-dark mt-[6px]">
+                  {{ employees.data.result.total }}
                 </div>
               </div>
             </div>
@@ -105,7 +113,7 @@
             </div>
           </div>
         </div>
-        <p v-if="$fetchState.pending">Fetching teams...</p>
+        <p v-if="$fetchState.pending">Fetching employees...</p>
         <p v-else-if="$fetchState.error">An error occurred :(</p>
         <div
           v-else
@@ -114,6 +122,7 @@
           <!-- Card -->
           <div
             v-for="employee in employees.data.result.data"
+            :key="employee.id"
             class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
           >
             <a
@@ -125,10 +134,21 @@
               {{ employee.name }}
             </div>
             <p class="text-center text-grey">{{ employee.role.name }}</p>
-            <div class="mt-[30px] text-success flex items-center gap-[6px]">
+
+            <div
+              v-if="employee.is_verified"
+              class="mt-[30px] text-success flex items-center gap-[6px]"
+            >
               <img src="/assets//svgs/ic-check-circle.svg" alt="" />
               Verified
             </div>
+            <a
+              v-else
+              href="#verify"
+              class="text-blue-700 mt-[30px] underline relative z-20"
+            >
+              Verify Now
+            </a>
           </div>
         </div>
       </section>
@@ -152,6 +172,7 @@ export default {
     this.employees = await this.$axios.get('/employee', {
       params: {
         company_id: this.$route.params.id,
+        team_id: this.$route.params.team_id,
         limit: 100,
         name: this.search,
       },

@@ -5,9 +5,9 @@
   >
     <div class="px-6 py-[50px] gap-y-[50px] flex flex-col">
       <div class="flex items-center justify-between">
-        <a href="#" class="flex justify-center">
+        <NuxtLink :to="{ name: 'companies' }" class="flex justify-center">
           <img src="/assets/svgs/logo-type.svg" alt="" />
-        </a>
+        </NuxtLink>
         <a href="#" id="toggleCloseSidebar" class="lg:hidden">
           <svg
             class="w-6 h-6 text-dark"
@@ -27,7 +27,7 @@
       </div>
       <div class="flex flex-col gap-4">
         <div class="text-sm text-grey">Daily Use</div>
-        <NuxtLink :to="{ name: 'companies-id' }" class="nav-link active">
+        <NuxtLink :to="{ name: 'companies-id' }" class="nav-link">
           <img src="/assets/svgs/ic-grid.svg" alt="" />
           Overview
         </NuxtLink>
@@ -62,7 +62,7 @@
           <img src="/assets/svgs/ic-settings.svg" alt="" />
           Settings
         </a>
-        <button href="#" class="nav-link">
+        <button @click="$auth.logout()" class="nav-link">
           <img src="/assets/svgs/ic-signout.svg" alt="" />
           Logout
         </button>

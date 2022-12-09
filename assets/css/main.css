@@ -41,11 +41,11 @@
     @apply p-[11px] flex items-center gap-4;
   }
 
-  .nav-link.active {
+  .nav-link.nuxt-link-exact-active {
     @apply bg-primary rounded-2xl text-white font-semibold;
   }
 
-  .nav-link.active img {
+  .nav-link.nuxt-link-exact-active img {
     @apply brightness-0 invert;
   }
 

@@ -64,7 +64,7 @@ export default {
           autoFetch: true
         },
         endpoints: {
-          login: { url: 'login', method: 'post' },
+          login: { url: '/login', method: 'post' },
           logout: { url: '/logout', method: 'post' },
           user: { url: '/user', method: 'get' }
         },
@@ -74,7 +74,6 @@ export default {
       }
     }
   },
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     postcss: {

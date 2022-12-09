@@ -45,11 +45,11 @@ export default {
     async createCompany() {
       try {
         this.$axios.post('/company', this.company).then((response) => {
-          console.log(response)
+          // console.log(response)
           this.$router.push({
             name: 'companies-id',
             params: {
-              id: response.data.data.id,
+              id: response.data.result.id,
             },
           })
         })

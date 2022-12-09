@@ -71,10 +71,13 @@
           :key="team.id"
           class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
         >
-          <a
-            href="#"
+          <NuxtLink
+            :to="{
+              name: 'companies-id-employees',
+              params: { team_id: team.id },
+            }"
             class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-          ></a>
+          ></NuxtLink>
           <img
             v-if="team.icon"
             :src="team.icon"
