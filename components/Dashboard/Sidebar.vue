@@ -1,6 +1,7 @@
 <template>
   <div
-    class="hidden lg:block fixed lg:max-w-[295px] w-full overflow-y-auto h-full bg-white z-[999]"
+    :class="{ hidden: !toggleSidebar }"
+    class="lg:block fixed lg:max-w-[295px] w-full overflow-y-auto h-full bg-white z-[999]"
     id="sidebarHRIS"
   >
     <div class="px-6 py-[50px] gap-y-[50px] flex flex-col">
@@ -8,7 +9,7 @@
         <NuxtLink :to="{ name: 'companies' }" class="flex justify-center">
           <img src="/assets/svgs/logo-type.svg" alt="" />
         </NuxtLink>
-        <a href="#" id="toggleCloseSidebar" class="lg:hidden">
+        <button @click="closeSidebar" id="toggleCloseSidebar" class="lg:hidden">
           <svg
             class="w-6 h-6 text-dark"
             fill="none"
@@ -23,7 +24,7 @@
               d="M6 18L18 6M6 6l12 12"
             ></path>
           </svg>
-        </a>
+        </button>
       </div>
       <div class="flex flex-col gap-4">
         <div class="text-sm text-grey">Daily Use</div>
@@ -46,22 +47,22 @@
       </div>
       <div class="flex flex-col gap-4">
         <div class="text-sm text-grey">Others</div>
-        <a href="#" class="nav-link">
+        <NuxtLink :to="{ name: 'insurances' }" class="nav-link">
           <img src="/assets/svgs/ic-box.svg" alt="" />
           Insurances
-        </a>
-        <a href="#" class="nav-link">
+        </NuxtLink>
+        <NuxtLink :to="{ name: 'companies' }" class="nav-link">
           <img src="/assets/svgs/ic-home.svg" alt="" />
           Company
-        </a>
-        <a href="#" class="nav-link">
+        </NuxtLink>
+        <NuxtLink :to="{ name: 'rewards' }" class="nav-link">
           <img src="/assets/svgs/ic-gift.svg" alt="" />
           Rewards
-        </a>
-        <a href="#" class="nav-link">
+        </NuxtLink>
+        <NuxtLink :to="{ name: 'settings' }" class="nav-link">
           <img src="/assets/svgs/ic-settings.svg" alt="" />
           Settings
-        </a>
+        </NuxtLink>
         <button @click="$auth.logout()" class="nav-link">
           <img src="/assets/svgs/ic-signout.svg" alt="" />
           Logout
@@ -70,3 +71,22 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  computed: {
+    toggleSidebar: {
+      get() {
+        return this.$store.state.sidebarOpen
+      },
+      set(value) {
+        this.$store.commit('SET_SIDEBAR_VISIBLE', value)
+      },
+    },
+  },
+  methods: {
+    closeSidebar() {
+      this.toggleSidebar = false
+    },
+  },
+}
+</script>

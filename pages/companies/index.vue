@@ -3,7 +3,11 @@
     <div class="text-[32px] font-semibold text-dark mb-4">Select Companies</div>
     <div class="w-full card">
       <div class="form-group">
-        <label for="" class="text-grey">Companies</label>
+        <label for="" class="text-grey"
+          >Companies<span v-show="!selectedCompany"
+            >, please select one..,</span
+          ></label
+        >
 
         <p v-if="$fetchState.pending">Fetching companies...</p>
         <p v-else-if="$fetchState.error">An error occurred :(</p>
@@ -24,6 +28,7 @@
       </div>
       <button
         @click="openCompany"
+        :disabled="!selectedCompany"
         type="button"
         class="w-full btn btn-primary mt-[14px]"
       >

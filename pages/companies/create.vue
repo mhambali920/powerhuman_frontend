@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="pt-[20px] md:px-[20px] flex justify-between items-center px-4">
-      <a href="/index.html">
+      <a href="#">
         <img src="/assets/svgs/logo-type.svg" alt="" />
       </a>
       <a href="#" onclick="history.back()">

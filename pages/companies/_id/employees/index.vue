@@ -8,23 +8,10 @@
         class="flex flex-col flex-wrap justify-between gap-6 md:items-center md:flex-row"
       >
         <div class="flex items-center justify-between gap-4">
-          <a href="#" id="toggleOpenSidebar" class="lg:hidden">
-            <svg
-              class="w-6 h-6 text-dark"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h7"
-              ></path>
-            </svg>
-          </a>
-          <div class="text-[32px] font-semibold text-dark">Employees</div>
+          <ToggleOpenSidebar />
+          <div class="text-[32px] font-semibold text-dark">
+            Employees {{ filter }}
+          </div>
         </div>
         <div class="flex items-center gap-4">
           <form class="shrink md:w-[516px] w-full">
@@ -74,6 +61,7 @@
                 >
                   Loading...
                 </div>
+                <p v-else-if="$fetchState.error">An error occurred :(</p>
                 <div v-else class="text-[32px] font-bold text-dark mt-[6px]">
                   {{ employees.data.result.total }}
                 </div>
@@ -157,17 +145,17 @@
 </template>
 
 <script>
+import ToggleOpenSidebar from '~/components/ToggleOpenSidebar.vue'
+
 export default {
   layout: 'dashboard',
   middleware: 'auth',
-
   data() {
     return {
       employees: [],
       filter: '',
     }
   },
-
   async fetch() {
     this.employees = await this.$axios.get('/employee', {
       params: {
@@ -178,5 +166,11 @@ export default {
       },
     })
   },
+  methods: {
+    ganti() {
+      this.filter = 'halllloooo bandung'
+    },
+  },
+  components: { ToggleOpenSidebar },
 }
 </script>

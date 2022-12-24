@@ -10,15 +10,26 @@
       <form @submit.prevent="userRegister" class="w-full card">
         <div class="form-group">
           <label for="" class="text-grey">Name</label>
-          <input v-model="register.name" type="text" class="input-field" />
+          <input
+            v-model="register.name"
+            type="text"
+            class="input-field"
+            required
+          />
         </div>
         <div class="form-group">
           <label for="" class="text-grey">Email Address</label>
-          <input v-model="register.email" type="email" class="input-field" />
+          <input
+            v-model="register.email"
+            type="email"
+            class="input-field"
+            required
+          />
         </div>
         <div class="form-group relative">
           <label for="" class="text-grey">Password</label>
           <input
+            required
             v-model="register.password"
             :type="showPassword ? 'text' : 'password'"
             class="input-field"
@@ -35,6 +46,7 @@
         <div class="form-group relative">
           <label for="" class="text-grey">Confirm Password</label>
           <input
+            required
             v-model="password"
             :type="showConfPassword ? 'text' : 'password'"
             class="input-field"
@@ -47,12 +59,16 @@
             <Icon name="eye" v-show="showConfPassword" />
             <Icon name="eyes-slash" v-show="!showConfPassword" />
           </button>
-          <p v-if="matchPassword" class="text-red-600 text-xs font-extralight">
-            password not match...
-          </p>
         </div>
+        <p v-if="!matchPassword" class="text-red-600 text-xs font-extralight">
+          password not match...
+        </p>
 
-        <button type="submit" class="w-full btn btn-primary mt-[14px]">
+        <button
+          :disabled="!matchPassword"
+          type="submit"
+          class="w-full btn btn-primary mt-[14px]"
+        >
           Continue
         </button>
       </form>
@@ -85,9 +101,7 @@ export default {
   },
   computed: {
     matchPassword() {
-      return (
-        this.password.length > 3 && this.register.password !== this.password
-      )
+      return this.register.password === this.password
     },
   },
   methods: {
@@ -96,7 +110,7 @@ export default {
         let response = await this.$axios.post('/register', this.register)
         console.log(response)
       } catch (error) {
-        console.log(error)
+        console.log(error.response)
       }
     },
   },
