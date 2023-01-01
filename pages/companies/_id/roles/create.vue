@@ -111,6 +111,7 @@ export default {
             let res2 = await this.$axios.post('/responsibilities', {
               name: this.filteredRsp,
               role_id: res.data.result.id,
+              company_id: this.$route.params.id,
             })
             console.log(res2)
             if (res2.status === 200) {

@@ -66,6 +66,13 @@
         >
           Continue
         </NuxtLink>
+        <div class="text-center">or</div>
+        <NuxtLink
+          :to="{ name: 'companies-id-roles-create' }"
+          class="w-full border btn btn-white"
+        >
+          Create New Role
+        </NuxtLink>
       </form>
     </section>
   </div>
@@ -97,6 +104,7 @@ export default {
       this.$axios
         .get('/responsibility', {
           params: {
+            company_id: this.$route.params.id,
             role_id: this.$store.state.employee.role_id,
           },
         })

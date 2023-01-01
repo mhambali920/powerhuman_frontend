@@ -16,7 +16,8 @@
       </p>
       <form @submit.prevent="createTeam" class="w-full card">
         <div class="mb-[2px] mx-auto">
-          <img src="/assets/svgs/ric-box.svg" alt="" />
+          <img v-if="icon" :src="icon" alt="" class="w-16 h-16 rounded-full" />
+          <img v-else src="/assets/svgs/ric-box.svg" alt="" />
         </div>
         <div class="form-group">
           <label for="" class="text-grey">Email Address</label>
@@ -35,12 +36,12 @@
           <label for="" class="text-grey">Team Icon</label>
           <input
             type="file"
-            class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            class="input-field file:mr-4 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             @change="uploadFile"
             ref="icon"
           />
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="" class="text-grey">Status</label>
           <select
             name=""
@@ -50,7 +51,7 @@
             <option value="" selected>Active</option>
             <option value="">Inactive</option>
           </select>
-        </div>
+        </div> -->
         <button type="submit" class="w-full btn btn-primary mt-[14px]">
           Continue
         </button>
@@ -64,6 +65,7 @@ export default {
 
   data() {
     return {
+      icon: null,
       team: {
         name: '',
         icon: '',
@@ -75,6 +77,11 @@ export default {
   methods: {
     uploadFile() {
       this.team.icon = this.$refs.icon.files[0]
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        this.icon = reader.result
+      }
+      reader.readAsDataURL(this.team.icon)
     },
     async createTeam() {
       try {

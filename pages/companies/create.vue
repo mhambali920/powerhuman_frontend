@@ -23,6 +23,15 @@
             v-model="company.name"
           />
         </div>
+        <div class="form-group">
+          <label for="" class="text-grey">Logo</label>
+          <input
+            type="file"
+            class="input-field file:mr-4 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            @change="uploadFile"
+            ref="logo"
+          />
+        </div>
         <button type="submit" class="w-full btn btn-primary mt-[14px]">
           Save
         </button>
@@ -38,14 +47,22 @@ export default {
     return {
       company: {
         name: '',
+        logo: null,
       },
     }
   },
   methods: {
+    uploadFile() {
+      this.company.logo = this.$refs.logo.files[0]
+    },
     async createCompany() {
+      const formData = new FormData()
+      formData.append('name', this.company.name)
+      formData.append('logo', this.company.logo)
+      const headers = { 'Content-Type': 'multipart/form-data' }
       try {
-        this.$axios.post('/company', this.company).then((response) => {
-          // console.log(response)
+        this.$axios.post('/company', formData, { headers }).then((response) => {
+          this.$store.commit('SET_COMPANY_ID', response.data.result.id)
           this.$router.push({
             name: 'companies-id',
             params: {

@@ -67,7 +67,7 @@
             v-if="team.icon"
             :src="team.icon"
             alt=""
-            class="w-24 h-24 rounded-full"
+            class="w-24 h-24 rounded-full object-cover"
           />
           <img
             v-else

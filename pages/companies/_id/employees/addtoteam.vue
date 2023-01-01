@@ -60,21 +60,28 @@
               <input
                 @click="updateTeamId"
                 :value="team.id"
+                v-model="employee.team_id"
                 type="radio"
                 name="team_id"
                 id="team_id"
                 class="absolute inset-0 checked:ring-2 ring-primary rounded-[26px] appearance-none"
               />
-              <img :src="team.icon" alt="" class="w-24" />
+              <img
+                :src="team.icon"
+                alt=""
+                class="w-24 h-24 rounded-full object-cover"
+              />
               <div class="mt-6 mb-1 font-semibold text-center text-dark">
                 {{ team.name }}
               </div>
-              <p class="text-center text-grey">{{ team.employees_count }}</p>
+              <p class="text-center text-grey">
+                {{ team.employees_count }} People
+              </p>
             </div>
           </div>
           <div class="flex justify-center">
             <button
-              v-if="this.$store.state.employee.team_id"
+              v-if="employee.team_id"
               @click="saveEmployee"
               type="button"
               id="continueBtn"
@@ -100,8 +107,10 @@ export default {
         gender: this.$store.state.employee.gender,
         age: this.$store.state.employee.age,
         phone: this.$store.state.employee.phone,
-        team_id: this.$store.state.employee.team_id,
+        photo: this.$store.state.employee.photo,
+        team_id: null,
         role_id: this.$store.state.employee.role_id,
+        company_id: this.$route.params.id,
       },
     }
   },
@@ -113,7 +122,7 @@ export default {
 
   methods: {
     updateTeamId(e) {
-      this.$store.commit('employee/updateTeamId', e.target.value)
+      return this.$store.commit('employee/updateTeamId', e.target.value)
     },
     resetState() {
       this.$store.commit('employee/updateName', '')
@@ -135,7 +144,7 @@ export default {
           this.resetState()
         }
       } catch (error) {
-        console.log(error)
+        console.log(error.response.data)
       }
     },
   },

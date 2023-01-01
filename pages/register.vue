@@ -8,6 +8,9 @@
         a bigger goals for your company
       </p>
       <form @submit.prevent="userRegister" class="w-full card">
+        <p v-if="errorMessage" class="text-red-500 text-sm my-4">
+          {{ errorMessage }}
+        </p>
         <div class="form-group">
           <label for="" class="text-grey">Name</label>
           <input
@@ -34,14 +37,13 @@
             :type="showPassword ? 'text' : 'password'"
             class="input-field"
           />
-          <button
-            type="button"
-            class="absolute right-8 bottom-3 bg-transparent flex items-center justify-center text-grey"
+          <div
+            class="absolute right-8 bottom-3 bg-transparent flex items-center justify-center text-grey cursor-pointer"
             @click="showPassword = !showPassword"
           >
             <Icon name="eye" v-show="showPassword" />
             <Icon name="eyes-slash" v-show="!showPassword" />
-          </button>
+          </div>
         </div>
         <div class="form-group relative">
           <label for="" class="text-grey">Confirm Password</label>
@@ -51,14 +53,13 @@
             :type="showConfPassword ? 'text' : 'password'"
             class="input-field"
           />
-          <button
-            type="button"
-            class="absolute right-8 bottom-3 bg-transparent flex items-center justify-center text-grey"
+          <div
+            class="absolute right-8 bottom-3 bg-transparent flex items-center justify-center text-grey cursor-pointer"
             @click="showConfPassword = !showConfPassword"
           >
             <Icon name="eye" v-show="showConfPassword" />
             <Icon name="eyes-slash" v-show="!showConfPassword" />
-          </button>
+          </div>
         </div>
         <p v-if="!matchPassword" class="text-red-600 text-xs font-extralight">
           password not match...
@@ -97,6 +98,7 @@ export default {
         email: '',
         password: '',
       },
+      errorMessage: '',
     }
   },
   computed: {
@@ -108,9 +110,14 @@ export default {
     async userRegister() {
       try {
         let response = await this.$axios.post('/register', this.register)
-        console.log(response)
+        // console.log(response)
+        if (response.status == 200) {
+          this.$router.push({ name: 'login' })
+        }
       } catch (error) {
-        console.log(error.response)
+        let { data } = error.response
+        this.errorMessage = data.meta.message
+        // console.log(data)
       }
     },
   },

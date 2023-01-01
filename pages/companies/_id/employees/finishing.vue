@@ -16,7 +16,8 @@
       </p>
       <form class="w-full card">
         <div class="flex flex-col items-center mb-[14px]">
-          <img src="/assets/images/user-f-1.png" width="70" alt="" />
+          <!-- <img src="/assets/images/user-f-1.png" width="70" alt="" /> -->
+          <img v-if="photoUrl" :src="photoUrl" width="70" alt="" />
           <div class="mt-6 mb-1 text-lg font-semibold">
             {{ this.$store.state.employee.name }}
           </div>
@@ -33,27 +34,51 @@
             @input="updatePhone"
           />
         </div>
+        <div class="form-group">
+          <label for="" class="text-grey">Photo</label>
+          <input
+            type="file"
+            ref="fileInput"
+            @change="storePhoto"
+            class="input-field"
+          />
+        </div>
         <NuxtLink
           :to="{ name: 'companies-id-employees-addrole' }"
           class="w-full btn btn-primary mt-[14px]"
         >
           Continue
         </NuxtLink>
+        {{ photoUrl }}
       </form>
     </section>
   </div>
 </template>
 <script>
+import { URL } from 'url'
+
 export default {
   middleware: 'auth',
+
   computed: {
     phone() {
       return this.$store.state.employee.phone
+    },
+    photoUrl() {
+      if (this.$store.getters.photo) {
+        return URL.createObjectURL(this.$store.getters.photo)
+      }
     },
   },
   methods: {
     updatePhone(e) {
       this.$store.commit('employee/updatePhone', e.target.value)
+    },
+    storePhoto() {
+      // ambil foto yang di pilih pengguna
+      const photo = this.$refs.fileInput.files[0]
+      // kirim file ke action vuex
+      this.$store.dispatch('employee/uploadPhoto', photo)
     },
   },
 }

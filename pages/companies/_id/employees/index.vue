@@ -9,14 +9,11 @@
       >
         <div class="flex items-center justify-between gap-4">
           <ToggleOpenSidebar />
-          <div class="text-[32px] font-semibold text-dark">
-            Employees {{ filter }}
-          </div>
+          <div class="text-[32px] font-semibold text-dark">Employees</div>
         </div>
         <div class="flex items-center gap-4">
           <form class="shrink md:w-[516px] w-full">
             <input
-              v-model="filter"
               name=""
               id=""
               class="input-field !outline-none !border-none italic form-icon-search ring-indigo-200 focus:ring-2 transition-all duration-300 w-full"
@@ -113,11 +110,25 @@
             :key="employee.id"
             class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
           >
-            <a
-              href="#"
+            <NuxtLink
+              :to="{
+                name: 'companies-id-employees-employee',
+                params: { employee: employee.id },
+              }"
               class="absolute inset-0 focus:ring-2 ring-primary rounded-[26px]"
-            ></a>
-            <img :src="employee.photo" class="w-24 h-24 rounded-full" alt="" />
+            ></NuxtLink>
+            <img
+              v-if="employee.photo"
+              :src="employee.photo"
+              class="w-24 h-24 rounded-full"
+              alt=""
+            />
+            <img
+              v-else
+              :src="imageUrl(employee.gender)"
+              class="w-24 h-24 rounded-full"
+              alt=""
+            />
             <div class="mt-6 mb-1 font-semibold text-center text-dark">
               {{ employee.name }}
             </div>
@@ -153,8 +164,14 @@ export default {
   data() {
     return {
       employees: [],
-      filter: '',
     }
+  },
+  methods: {
+    imageUrl(gender) {
+      return gender == 'MALE'
+        ? '/assets/images/male.jpg'
+        : '/assets/images/female.jpg'
+    },
   },
   async fetch() {
     this.employees = await this.$axios.get('/employee', {
@@ -166,11 +183,7 @@ export default {
       },
     })
   },
-  methods: {
-    ganti() {
-      this.filter = 'halllloooo bandung'
-    },
-  },
+
   components: { ToggleOpenSidebar },
 }
 </script>

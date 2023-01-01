@@ -18,7 +18,7 @@
           class="appearance-none input-field form-icon-chevron_down"
         >
           <option
-            v-for="company in companies.data.result.data"
+            v-for="company in companies"
             :value="company.id"
             :key="company.id"
           >
@@ -54,11 +54,15 @@ export default {
     }
   },
   async fetch() {
-    this.companies = await this.$axios.get('/company?limit=100')
-    // this.companies = response.data.data
+    let response = await this.$axios.get('/company?limit=100')
+    if (response.status === 200) {
+      this.companies = response.data.result.data
+    }
+    // console.log(response)
   },
   methods: {
     openCompany() {
+      this.$store.commit('SET_COMPANY_ID', this.selectedCompany)
       this.$router.push({
         name: 'companies-id',
         params: {
