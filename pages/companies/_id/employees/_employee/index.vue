@@ -45,7 +45,7 @@
             <img
               v-if="employee.photo"
               class="w-24 h-24 rounded-full mx-auto object-cover"
-              src="/assets/images/people.jpg"
+              :src="employee.photo"
               alt=""
               width="384"
               height="512"

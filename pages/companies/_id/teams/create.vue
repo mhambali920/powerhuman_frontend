@@ -80,6 +80,7 @@ export default {
       const reader = new FileReader()
       reader.onloadend = () => {
         this.icon = reader.result
+        console.log(reader.result)
       }
       reader.readAsDataURL(this.team.icon)
     },

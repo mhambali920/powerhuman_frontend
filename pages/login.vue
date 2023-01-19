@@ -9,29 +9,29 @@
         Manage your employees to achieve <br />
         a bigger goals for your company
       </p>
+      <Transition>
+        <div
+          v-if="loginError"
+          class="text-white bg-red-500 px-4 py-2 mb-2 rounded-lg"
+        >
+          {{ loginError }}
+          <span class="ml-10 cursor-pointer" @click="loginError = null">x</span>
+        </div>
+      </Transition>
       <form class="w-full card" @submit.prevent="userLogin">
-        <p v-if="loginInfo" class="text-red-500 font-light text-sm text-center">
-          {{ loginInfo.statusText }}
-        </p>
         <div class="form-group">
           <label for="" class="text-grey">Email Address</label>
           <input v-model="login.email" type="email" class="input-field" />
+          <InputError v-if="validationError" :errors="validationError.email" />
         </div>
+
         <div class="form-group relative">
           <label for="" class="text-grey">Password</label>
-          <input
-            v-model="login.password"
-            :type="showPassword ? 'text' : 'password'"
-            class="input-field"
+          <InputPassword v-model="login.password" :password="login.password" />
+          <InputError
+            v-if="validationError"
+            :errors="validationError.password"
           />
-          <button
-            type="button"
-            class="absolute right-8 bottom-3 bg-transparent flex items-center justify-center text-grey"
-            @click="showPassword = !showPassword"
-          >
-            <Icon name="eye" v-show="showPassword" />
-            <Icon name="eyes-slash" v-show="!showPassword" />
-          </button>
         </div>
 
         <button type="submit" class="w-full btn btn-primary mt-[14px]">
@@ -52,12 +52,15 @@
   </div>
 </template>
 <script>
+import InputError from '~/components/InputError.vue'
+import InputPassword from '~/components/InputPassword.vue'
+
 export default {
   auth: 'guest',
   data() {
     return {
-      loginInfo: {},
-      showPassword: false,
+      validationError: null,
+      loginError: null,
       login: {
         email: '',
         password: '',
@@ -67,13 +70,31 @@ export default {
   methods: {
     async userLogin() {
       try {
-        this.loginInfo = await this.$auth.loginWith('local', {
+        await this.$auth.loginWith('local', {
           data: this.login,
         })
-      } catch (err) {
-        this.loginInfo = err.response
+      } catch (e) {
+        // console.log(e.response)
+        if (e.response.status === 400 || e.response.status === 422) {
+          this.validationError = e.response.data.errors
+        }
+        if (e.response.status === 401) {
+          this.loginError = e.response.data.meta.message
+        }
       }
     },
   },
+  components: { InputPassword, InputError },
 }
 </script>
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 1s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

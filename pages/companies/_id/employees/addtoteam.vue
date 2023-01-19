@@ -137,7 +137,16 @@ export default {
     },
     async saveEmployee() {
       try {
-        let response = await this.$axios.post('/employee', this.employee)
+        const formData = new FormData()
+        for (let key in this.employee) {
+          formData.append(key, this.employee[key])
+        }
+        // const headers = { 'Content-Type': 'multipart/form-data' }
+        let response = await this.$axios.post('/employee', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
         if (response.status == 200) {
           this.$router.push({ name: 'companies-id-employees' })
           // reset state

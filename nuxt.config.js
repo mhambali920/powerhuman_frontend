@@ -21,23 +21,16 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    '@/assets/css/main.css',
-  ],
+  css: ['@/assets/css/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    '@/plugins/vue-scrollto'
-  ],
+  plugins: ['@/plugins/vue-scrollto'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-    '@nuxt/postcss8',
-    '@nuxtjs/dotenv',
-  ],
+  buildModules: ['@nuxt/postcss8', '@nuxtjs/dotenv'],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -59,22 +52,23 @@ export default {
           property: 'result.access_token',
           global: true,
           required: true,
-          type: 'Bearer'
+          type: 'Bearer',
         },
         user: {
           property: 'result',
-          autoFetch: true
+          autoFetch: true,
         },
         endpoints: {
           login: { url: '/login', method: 'post' },
           logout: { url: '/logout', method: 'post' },
-          user: { url: '/user', method: 'get' }
+          user: { url: '/user', method: 'get' },
         },
         redirect: {
-          home: '/companies'
-        }
-      }
-    }
+          home: '/companies',
+        },
+        errorField: 'message',
+      },
+    },
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

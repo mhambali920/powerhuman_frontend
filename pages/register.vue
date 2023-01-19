@@ -7,61 +7,65 @@
         Manage your employees to achieve <br />
         a bigger goals for your company
       </p>
+      <Transition>
+        <div
+          v-if="errors.register"
+          class="text-white bg-red-500 px-4 py-2 mb-2 rounded-lg"
+        >
+          {{ errors.register }}
+          <span class="ml-10 cursor-pointer" @click="errors.register = null"
+            >x</span
+          >
+        </div>
+      </Transition>
       <form @submit.prevent="userRegister" class="w-full card">
-        <p v-if="errorMessage" class="text-red-500 text-sm my-4">
-          {{ errorMessage }}
-        </p>
         <div class="form-group">
           <label for="" class="text-grey">Name</label>
-          <input
-            v-model="register.name"
-            type="text"
-            class="input-field"
-            required
-          />
+          <input v-model="register.name" type="text" class="input-field" />
+          <template v-if="errors.validation"
+            ><p
+              v-for="(val, index) in errors.validation.name"
+              :key="index"
+              class="text-red-500 text-xs"
+            >
+              {{ val }}
+            </p>
+          </template>
         </div>
         <div class="form-group">
           <label for="" class="text-grey">Email Address</label>
-          <input
-            v-model="register.email"
-            type="email"
-            class="input-field"
-            required
-          />
+          <input v-model="register.email" type="email" class="input-field" />
+          <template v-if="errors.validation"
+            ><p
+              v-for="(val, index) in errors.validation.email"
+              :key="index"
+              class="text-red-500 text-xs"
+            >
+              {{ val }}
+            </p>
+          </template>
         </div>
         <div class="form-group relative">
           <label for="" class="text-grey">Password</label>
-          <input
-            required
+          <InputPassword
             v-model="register.password"
-            :type="showPassword ? 'text' : 'password'"
-            class="input-field"
+            :password="register.password"
           />
-          <div
-            class="absolute right-8 bottom-3 bg-transparent flex items-center justify-center text-grey cursor-pointer"
-            @click="showPassword = !showPassword"
-          >
-            <Icon name="eye" v-show="showPassword" />
-            <Icon name="eyes-slash" v-show="!showPassword" />
-          </div>
+          <template v-if="errors.validation"
+            ><p
+              v-for="(val, index) in errors.validation.password"
+              :key="index"
+              class="text-red-500 text-xs"
+            >
+              {{ val }}
+            </p>
+          </template>
         </div>
         <div class="form-group relative">
           <label for="" class="text-grey">Confirm Password</label>
-          <input
-            required
-            v-model="password"
-            :type="showConfPassword ? 'text' : 'password'"
-            class="input-field"
-          />
-          <div
-            class="absolute right-8 bottom-3 bg-transparent flex items-center justify-center text-grey cursor-pointer"
-            @click="showConfPassword = !showConfPassword"
-          >
-            <Icon name="eye" v-show="showConfPassword" />
-            <Icon name="eyes-slash" v-show="!showConfPassword" />
-          </div>
+          <InputPassword v-model="confPassword" :password="confPassword" />
         </div>
-        <p v-if="!matchPassword" class="text-red-600 text-xs font-extralight">
+        <p v-if="!matchPassword" class="text-red-500 text-xs">
           password not match...
         </p>
 
@@ -87,23 +91,26 @@
   </div>
 </template>
 <script>
+import InputPassword from '~/components/InputPassword.vue'
+
 export default {
   data() {
     return {
-      showPassword: false,
-      showConfPassword: false,
-      password: '',
+      confPassword: '',
       register: {
         name: '',
         email: '',
         password: '',
       },
-      errorMessage: '',
+      errors: {
+        validation: null,
+        register: null,
+      },
     }
   },
   computed: {
     matchPassword() {
-      return this.register.password === this.password
+      return this.register.password === this.confPassword
     },
   },
   methods: {
@@ -114,12 +121,16 @@ export default {
         if (response.status == 200) {
           this.$router.push({ name: 'login' })
         }
-      } catch (error) {
-        let { data } = error.response
-        this.errorMessage = data.meta.message
-        // console.log(data)
+      } catch (e) {
+        // console.log(e.response)
+        if (e.response.status === 422) {
+          this.errors.validation = e.response.data.errors
+        } else {
+          this.errors.register = e.response.data.meta.message
+        }
       }
     },
   },
+  components: { InputPassword },
 }
 </script>

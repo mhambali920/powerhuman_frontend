@@ -17,7 +17,12 @@
       <form class="w-full card">
         <div class="flex flex-col items-center mb-[14px]">
           <!-- <img src="/assets/images/user-f-1.png" width="70" alt="" /> -->
-          <img v-if="photoUrl" :src="photoUrl" width="70" alt="" />
+          <img
+            v-if="photo"
+            :src="photo"
+            class="w-24 h-24 rounded-full"
+            alt="foto"
+          />
           <div class="mt-6 mb-1 text-lg font-semibold">
             {{ this.$store.state.employee.name }}
           </div>
@@ -38,9 +43,8 @@
           <label for="" class="text-grey">Photo</label>
           <input
             type="file"
-            ref="fileInput"
-            @change="storePhoto"
-            class="input-field"
+            @change="updatePhoto"
+            class="input-field file:mr-4 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
         </div>
         <NuxtLink
@@ -49,36 +53,38 @@
         >
           Continue
         </NuxtLink>
-        {{ photoUrl }}
       </form>
     </section>
   </div>
 </template>
 <script>
-import { URL } from 'url'
-
 export default {
   middleware: 'auth',
-
+  data() {
+    return {
+      photo: null,
+    }
+  },
   computed: {
     phone() {
       return this.$store.state.employee.phone
-    },
-    photoUrl() {
-      if (this.$store.getters.photo) {
-        return URL.createObjectURL(this.$store.getters.photo)
-      }
     },
   },
   methods: {
     updatePhone(e) {
       this.$store.commit('employee/updatePhone', e.target.value)
     },
-    storePhoto() {
-      // ambil foto yang di pilih pengguna
-      const photo = this.$refs.fileInput.files[0]
+    updatePhoto(e) {
+      // console.log(e.target.files[0])
       // kirim file ke action vuex
-      this.$store.dispatch('employee/uploadPhoto', photo)
+      this.$store.dispatch('employee/uploadPhoto', e.target.files[0])
+
+      // create url photo
+      const reader = new FileReader()
+      reader.readAsDataURL(e.target.files[0])
+      reader.onloadend = () => {
+        this.photo = reader.result
+      }
     },
   },
 }
