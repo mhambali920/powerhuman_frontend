@@ -84,11 +84,12 @@
           </div>
         </div>
         <div class="flex items-center justify-center p-8 mt-12 gap-8">
-          <FancyButton>Edit</FancyButton>
+          <FancyButton @click="edit()">Edit</FancyButton>
           <FancyButton>{{
             employee.is_verified ? 'INACTIVATE' : 'ACTIVATE'
           }}</FancyButton>
         </div>
+        {{ role }}
       </div>
     </section>
   </div>
@@ -102,11 +103,17 @@ export default {
   data() {
     return {
       employee: {},
+      team: null,
+      role: null,
     }
   },
 
   methods: {
-    async fetchData() {
+    async edit() {
+      await this.fetchRole()
+      // this.fetchTeam()
+    },
+    async fetchEmployee() {
       let {
         data: { result },
       } = await this.$axios.get('/employee', {
@@ -117,6 +124,26 @@ export default {
       })
       this.employee = result
     },
+    async fetchTeam() {
+      let {
+        data: { result },
+      } = await this.$axios.get('/team', {
+        params: {
+          company_id: this.$route.params.id,
+        },
+      })
+      this.team = result
+    },
+    async fetchRole() {
+      let {
+        data: { result },
+      } = await this.$axios.get('/role', {
+        params: {
+          company_id: this.$route.params.id,
+        },
+      })
+      this.role = result
+    },
     imageUrl(gender) {
       return gender == 'MALE'
         ? '/assets/images/male.jpg'
@@ -124,7 +151,7 @@ export default {
     },
   },
   async fetch() {
-    await this.fetchData()
+    await this.fetchEmployee()
   },
   components: { Icon, FancyButton },
 }
