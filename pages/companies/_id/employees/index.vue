@@ -12,12 +12,17 @@
           <div class="text-[32px] font-semibold text-dark">Employees</div>
         </div>
         <div class="flex items-center gap-4">
-          <form class="shrink md:w-[516px] w-full">
+          <form
+            @submit.prevent="fetchData()"
+            class="shrink md:w-[516px] w-full"
+          >
             <input
-              name=""
+              v-model="search"
+              type="text"
+              name="name"
               id=""
               class="input-field !outline-none !border-none italic form-icon-search ring-indigo-200 focus:ring-2 transition-all duration-300 w-full"
-              placeholder="Search people"
+              placeholder="Search employees"
             />
           </form>
           <a
@@ -60,7 +65,7 @@
                 </div>
                 <p v-else-if="$fetchState.error">An error occurred :(</p>
                 <div v-else class="text-[32px] font-bold text-dark mt-[6px]">
-                  {{ employees.data.result.total }}
+                  {{ employees.result.employees.total }}
                 </div>
               </div>
             </div>
@@ -69,8 +74,15 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-grey">Active</p>
-                <div class="text-[32px] font-bold text-dark mt-[6px]">
-                  205,399
+                <div
+                  v-if="$fetchState.pending"
+                  class="text-[24px] font-bold text-grey mt-[6px]"
+                >
+                  Loading...
+                </div>
+                <p v-else-if="$fetchState.error">An error occurred :(</p>
+                <div v-else class="text-[32px] font-bold text-dark mt-[6px]">
+                  {{ employees.result.activeEmployees }}
                 </div>
               </div>
             </div>
@@ -79,8 +91,15 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-grey">Inactive</p>
-                <div class="text-[32px] font-bold text-dark mt-[6px]">
-                  142,593
+                <div
+                  v-if="$fetchState.pending"
+                  class="text-[24px] font-bold text-grey mt-[6px]"
+                >
+                  Loading...
+                </div>
+                <p v-else-if="$fetchState.error">An error occurred :(</p>
+                <div v-else class="text-[32px] font-bold text-dark mt-[6px]">
+                  {{ employees.result.inActiveEmployees }}
                 </div>
               </div>
             </div>
@@ -106,7 +125,7 @@
         >
           <!-- Card -->
           <div
-            v-for="employee in employees.data.result.data"
+            v-for="employee in employees.result.employees.data"
             :key="employee.id"
             class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
           >
@@ -141,13 +160,12 @@
               <img src="/assets//svgs/ic-check-circle.svg" alt="" />
               Verified
             </div>
-            <a
+            <button
               v-else
-              href="#verify"
-              class="text-blue-700 mt-[30px] underline relative z-20"
+              class="text-blue-700 mt-[30px] underline relative z-20 hover:font-semibold"
             >
               Verify Now
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -163,10 +181,23 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      search: '',
       employees: [],
     }
   },
   methods: {
+    async fetchData() {
+      let { data } = await this.$axios.get('/employee', {
+        params: {
+          company_id: this.$route.params.id,
+          team_id: this.$route.params.team_id,
+          limit: 20,
+          name: this.search,
+        },
+      })
+      this.employees = data
+    },
+
     imageUrl(gender) {
       return gender == 'MALE'
         ? '/assets/images/male.jpg'
@@ -174,14 +205,7 @@ export default {
     },
   },
   async fetch() {
-    this.employees = await this.$axios.get('/employee', {
-      params: {
-        company_id: this.$route.params.id,
-        team_id: this.$route.params.team_id,
-        limit: 100,
-        name: this.search,
-      },
-    })
+    await this.fetchData()
   },
 
   components: { ToggleOpenSidebar },

@@ -9,6 +9,8 @@
         Manage your employees to achieve <br />
         a bigger goals for your company
       </p>
+      <p>email : demo@example.com</p>
+      <p>password : admin1234</p>
       <Transition>
         <div
           v-if="loginError"
@@ -33,7 +35,6 @@
             :errors="validationError.password"
           />
         </div>
-
         <button type="submit" class="w-full btn btn-primary mt-[14px]">
           Sign In
         </button>

@@ -7,7 +7,7 @@
       <div class="flex items-center justify-between gap-4">
         <ToggleOpenSidebar />
         <div class="text-[32px] font-semibold text-dark">
-          insurances omingsoon...
+          insurances Comingsoon...
         </div>
       </div>
     </section>

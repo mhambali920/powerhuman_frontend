@@ -22,28 +22,18 @@
         <div class="form-group">
           <label for="" class="text-grey">Name</label>
           <input v-model="register.name" type="text" class="input-field" />
-          <template v-if="errors.validation"
-            ><p
-              v-for="(val, index) in errors.validation.name"
-              :key="index"
-              class="text-red-500 text-xs"
-            >
-              {{ val }}
-            </p>
-          </template>
+          <InputError
+            v-if="errors.validation"
+            :errors="errors.validation.name"
+          />
         </div>
         <div class="form-group">
           <label for="" class="text-grey">Email Address</label>
           <input v-model="register.email" type="email" class="input-field" />
-          <template v-if="errors.validation"
-            ><p
-              v-for="(val, index) in errors.validation.email"
-              :key="index"
-              class="text-red-500 text-xs"
-            >
-              {{ val }}
-            </p>
-          </template>
+          <InputError
+            v-if="errors.validation"
+            :errors="errors.validation.email"
+          />
         </div>
         <div class="form-group relative">
           <label for="" class="text-grey">Password</label>
@@ -51,15 +41,10 @@
             v-model="register.password"
             :password="register.password"
           />
-          <template v-if="errors.validation"
-            ><p
-              v-for="(val, index) in errors.validation.password"
-              :key="index"
-              class="text-red-500 text-xs"
-            >
-              {{ val }}
-            </p>
-          </template>
+          <InputError
+            v-if="errors.validation"
+            :errors="errors.validation.password"
+          />
         </div>
         <div class="form-group relative">
           <label for="" class="text-grey">Confirm Password</label>
@@ -92,6 +77,7 @@
 </template>
 <script>
 import InputPassword from '~/components/InputPassword.vue'
+import InputError from '~/components/InputError.vue'
 
 export default {
   data() {
@@ -131,6 +117,6 @@ export default {
       }
     },
   },
-  components: { InputPassword },
+  components: { InputPassword, InputError },
 }
 </script>
